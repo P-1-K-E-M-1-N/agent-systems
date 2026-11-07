@@ -1,0 +1,46 @@
+{
+  "slug": "supplier-news",
+  "name": "Supplier News Monitor",
+  "type": "revenue",
+  "order": 11,
+  "pitch": "Supplier news monitor from GDELT.",
+  "gate": "G1",
+  "status": "active",
+  "blocker": "",
+  "next_step": "G1 prototype",
+  "gates": {
+    "G0": {
+      "started": "2026-11-01T11:03:56+00:00",
+      "finished": "2026-11-01T11:08:23+00:00",
+      "result": "pass",
+      "note": "GDELT DOC API live, free commercial use, 15-min updates; ~25% precision on supplier events, needs filtering"
+    },
+    "G1": {
+      "started": "2026-11-02T11:27:35+00:00",
+      "finished": null,
+      "result": null,
+      "note": "prototype web app; data run pending (GDELT 429)"
+    },
+    "G2": {
+      "started": null,
+      "finished": null,
+      "result": null,
+      "note": ""
+    },
+    "G3": {
+      "started": null,
+      "finished": null,
+      "result": null,
+      "note": ""
+    },
+    "PLAN": {
+      "started": null,
+      "finished": null,
+      "result": null,
+      "note": ""
+    }
+  },
+  "merge_candidates": [],
+  "created": "2026-11-01T11:03:40+00:00",
+  "updated": "2026-11-02T11:27:35+00:00"
+}

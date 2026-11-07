@@ -1,0 +1,22 @@
+{
+  "sources": [
+    {
+      "id": "sec_edgar",
+      "name": "SEC EDGAR (data.sec.gov submissions API, www.sec.gov browse-edgar feeds)",
+      "owner": "U.S. Securities and Exchange Commission",
+      "base_url": "https://www.sec.gov/",
+      "terms_url": "https://www.sec.gov/os/webmaster-faq#developers",
+      "license": "US Government work; filings are public records. No licence restriction on reuse; SEC fair-access policy applies (declared User-Agent, max 10 requests/second).",
+      "commercial_ok": true,
+      "attribution": "Source: U.S. Securities and Exchange Commission EDGAR",
+      "update_frequency": "near real time (filings disseminated within minutes of acceptance)",
+      "rate_limit": "10 requests/second, descriptive User-Agent with contact required",
+      "key_env": "",
+      "cache_ttl_s": 900,
+      "daily_budget": 400,
+      "min_interval_s": 0.3,
+      "notes": "Company-level data only (registrants, filing type, date, accession). No individual-person data is collected. User-Agent carries the contact address Nick chose on 2026-11-01 (FROM_NICK entry cbbb5455dd46), as SEC's fair-access policy requires.",
+      "user_agent": "IdeaFactory/0.1 (open-data validation; contact nickolasrlektzian+ideafactory@gmail.com)"
+    }
+  ]
+}

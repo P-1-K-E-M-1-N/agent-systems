@@ -1,0 +1,46 @@
+{
+  "sources": [
+    {
+      "id": "detroit_permits",
+      "terms_url": "https://data.detroitmi.gov/pages/disclaimer",
+      "license": "Detroit Open Data Portal (Executive Order 2015-2): data may be 'downloaded, redistributed and re-used by individuals, business, researchers...'; datasets carry no explicit license (licenseInfo empty); provided AS-IS. CONFLICT: detroitmi.gov/Privacy (linked from portal footer) says 'Commercial use of the information ... is prohibited without written permission'. Nick to get written confirmation before launch.",
+      "commercial_ok": true,
+      "update_frequency": "daily (ArcGIS dataLastEditDate 2026-10-23 08:25 UTC; max issued_date 2026-10-22, i.e. 1-2 day lag)",
+      "notes": "G0 2026-10-24: 47,820 permits since 2019-01-02; 570 issued last 30 days, 102 last 7 days. No contractor field. The /pages/terms-of-use URL does not exist on the Hub site (page list has no such slug); the Disclaimer page is the published terms. Fields used: record_id, address, issued_date, permit_type, construction_type, work_description, amt_estimated_contractor_cost, zip_code, neighborhood, council_district."
+    },
+    {
+      "id": "detroit_trades_permits",
+      "name": "City of Detroit BSEED Trades Permits (electrical, mechanical, plumbing, boiler, elevator)",
+      "owner": "City of Detroit, BSEED via data.detroitmi.gov",
+      "base_url": "https://services2.arcgis.com/qvkbeam7Wirps6zC/arcgis/rest/services/bseed_trades_permits/FeatureServer/0",
+      "terms_url": "https://data.detroitmi.gov/pages/disclaimer",
+      "license": "Same portal terms as detroit_permits (open data policy permits business reuse and redistribution; AS-IS; no explicit per-dataset license; written commercial confirmation pending).",
+      "commercial_ok": true,
+      "attribution": "Data: City of Detroit Open Data Portal",
+      "update_frequency": "daily (dataLastEditDate 2026-10-23 08:27 UTC; max issued_date 2026-10-22)",
+      "rate_limit": "none published; 1000 records/page",
+      "key_env": "",
+      "cache_ttl_s": 21600,
+      "daily_budget": 300,
+      "min_interval_s": 0.5,
+      "notes": "G0 2026-10-24: 121,606 permits; 1,955 issued last 30 days (Plumbing 1,067, Mechanical 467, Electrical 349, Fire Alarm 26, Elevator 24, Boiler 13, Generator 9); 465 last 7 days; 89% have contact_business_name (contractor business of record). Many plumbing permits are DWSD lead-service-line replacements (utility work, not leads). PEOPLE-DATA RULE: never request or store owner_name or contact_name; use contact_business_name only."
+    },
+    {
+      "id": "detroit_demolition_permits",
+      "name": "City of Detroit BSEED Demolition Permits",
+      "owner": "City of Detroit, BSEED via data.detroitmi.gov",
+      "base_url": "https://services2.arcgis.com/qvkbeam7Wirps6zC/arcgis/rest/services/bseed_demolition_permits/FeatureServer/0",
+      "terms_url": "https://data.detroitmi.gov/pages/disclaimer",
+      "license": "Same portal terms as detroit_permits (open data policy permits business reuse and redistribution; AS-IS; no explicit per-dataset license; written commercial confirmation pending).",
+      "commercial_ok": true,
+      "attribution": "Data: City of Detroit Open Data Portal",
+      "update_frequency": "daily (dataLastEditDate 2026-10-23 08:23 UTC; max issued_date 2026-10-22)",
+      "rate_limit": "none published; 1000 records/page",
+      "key_env": "",
+      "cache_ttl_s": 21600,
+      "daily_budget": 200,
+      "min_interval_s": 0.5,
+      "notes": "G0 2026-10-24: 16,288 permits; 24 issued last 30 days, 7 last 7 days; 100% have demolition_contractor. PEOPLE-DATA RULE: never request or store owner_name; demolition_contractor is a licensed wrecking business."
+    }
+  ]
+}

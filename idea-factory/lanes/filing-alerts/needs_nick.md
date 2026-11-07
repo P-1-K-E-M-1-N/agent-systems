@@ -1,0 +1,5 @@
+# Needs Nick: filing-alerts
+
+- [x] **Choose a contact email for SEC requests** (2026-10-31): SEC EDGAR now returns 403 "Your Request Originates from an Undeclared Automated Tool" to data.sec.gov because our User-Agent has no contact address (their fair-access rule requires one; a real address, not a made-up one). Tell me which email you are happy to have in the header, e.g. a project address (not your personal one unless you want it). Free, no sign-up. Until then the lane cannot fetch and I will not guess an address. _(SKIPPED via FROM_NICK 2026-11-01 18:22)_
+
+- [ ] **Pick the buyer for Michigan 8-K alerts** (2026-11-05): I could not find 10-20 real Michigan buyers in public listings (only 5 weak guesses: Bodman PLC, Seizert Capital, Monument MicroCap, Quarton Capital, Schechter Investment Advisors). Tell me who you think would pay (small-cap investors, issuer law firms, local business press, suppliers to Michigan public companies), or say Skip and I will test it as a traffic lane with keyword volumes instead.

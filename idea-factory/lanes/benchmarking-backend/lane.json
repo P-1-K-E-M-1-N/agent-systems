@@ -1,0 +1,46 @@
+{
+  "slug": "benchmarking-backend",
+  "name": "Benchmarking Compliance Backend",
+  "type": "revenue",
+  "order": 6,
+  "pitch": "ENERGY STAR Portfolio Manager web services; access requires approval, so draft the request for Nick.",
+  "gate": "G0",
+  "status": "waiting_nick",
+  "blocker": "Nick to create the free Portfolio Manager TEST account and store test credentials as environment secrets (or park). License resolved 2026-11-01: commercial use OK.",
+  "next_step": "On Done: pass G0 with a real test-API call, then G1 prototype against /wstest/",
+  "gates": {
+    "G0": {
+      "started": "2026-10-25T11:03:58+00:00",
+      "finished": null,
+      "result": null,
+      "note": "data check"
+    },
+    "G1": {
+      "started": null,
+      "finished": null,
+      "result": null,
+      "note": ""
+    },
+    "G2": {
+      "started": null,
+      "finished": null,
+      "result": null,
+      "note": ""
+    },
+    "G3": {
+      "started": null,
+      "finished": null,
+      "result": null,
+      "note": ""
+    },
+    "PLAN": {
+      "started": null,
+      "finished": null,
+      "result": null,
+      "note": ""
+    }
+  },
+  "merge_candidates": [],
+  "created": "2026-10-24T11:01:06+00:00",
+  "updated": "2026-11-02T00:01:32+00:00"
+}

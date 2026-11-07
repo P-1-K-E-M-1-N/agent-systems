@@ -1,0 +1,21 @@
+{
+  "sources": [
+    {
+      "commercial_ok": true,
+      "key_env": "",
+      "cache_ttl_s": 21600,
+      "daily_budget": 300,
+      "min_interval_s": 0.5,
+      "id": "usaspending",
+      "name": "USAspending.gov API",
+      "owner": "U.S. Department of the Treasury, Bureau of the Fiscal Service",
+      "base_url": "https://api.usaspending.gov/api/v2",
+      "terms_url": "https://www.usaspending.gov/about",
+      "license": "US Government work / DATA Act open data, public domain",
+      "attribution": "Source: USAspending.gov",
+      "update_frequency": "daily (agency submissions lag; some monthly/quarterly)",
+      "rate_limit": "none published; be polite",
+      "notes": "No key needed. Award recipients are businesses; individual recipients are masked and must be excluded (rule 4)."
+    }
+  ]
+}

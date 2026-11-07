@@ -1,0 +1,3 @@
+# Needs Nick: weather-trigger-jobs
+
+- [x] **Send G2 outreach** (2026-10-29): 14 landscapers, paving/sealcoat firms, tent rental companies and outdoor venues (roofers left out, they overlap storm-lead). None has a published email, so work down `lanes/weather-trigger-jobs/outreach/send_sheet.md`: each entry has a link (several are directory listings, so find the company's own contact form) and the text to paste. If a contact gives an email, add it to `email` in `outreach/targets.csv` and run `python -m core.mailmerge weather-trigger-jobs --eml <folder>` for a draft with `samples/job_day_outlook.pdf` attached. Mark Done with how many were sent; paste replies here. _(SKIPPED via FROM_NICK 2026-11-01 18:22)_

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    {
+      "id": "glerl",
+      "name": "NOAA GLERL CoastWatch Great Lakes (surface water temperature, GLSEA/GLCFS)",
+      "owner": "NOAA Great Lakes Environmental Research Laboratory",
+      "base_url": "https://coastwatch.glerl.noaa.gov/",
+      "terms_url": "https://www.noaa.gov/information-technology/use-of-noaa-information",
+      "license": "US Government work, public domain",
+      "commercial_ok": true,
+      "attribution": "Source: NOAA GLERL CoastWatch",
+      "update_frequency": "daily (GLSEA lake-average surface temps); GLCFS nowcast hourly",
+      "rate_limit": "none published; be polite",
+      "key_env": "",
+      "cache_ttl_s": 21600,
+      "daily_budget": 300,
+      "min_interval_s": 0.5,
+      "notes": "Lane 3 registered this at G0 as the public-domain water-temperature fallback for months when NDBC buoys are pulled (Nov-Apr). Daily lake-average CSVs: https://apps.glerl.noaa.gov/coastwatch/webdata/statistic/csv/all_year_glsea_avg_{s,m,h,e,c}_F.csv ; long-term comparison: avgtemps-{m}_1995-2026_F.csv."
+    },
+    {
+      "id": "glos",
+      "key_env": "",
+      "notes": "Lane 3 override for G0 inspection only: the public Seagull ERDDAP (https://seagull-erddap.glos.org/erddap/) needs no API key, so key_env is blanked here to let core.fetch make unauthenticated read requests. Core entry still says commercial_ok=unknown; https://glos.org/terms-of-use/ returns 404 (checked 2026-10-24). Lane may NOT ship on GLOS until Nick confirms terms."
+    }
+  ]
+}

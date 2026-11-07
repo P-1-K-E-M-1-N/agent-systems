@@ -1,0 +1,46 @@
+{
+  "slug": "satellite-change",
+  "name": "Satellite Change Alerts",
+  "type": "revenue",
+  "order": 9,
+  "pitch": "Change alerts for land owners and farmers from Copernicus Sentinel-2.",
+  "gate": "G1",
+  "status": "active",
+  "blocker": "",
+  "next_step": "G1 prototype",
+  "gates": {
+    "G0": {
+      "started": "2026-10-26T11:07:14+00:00",
+      "finished": "2026-10-26T11:07:27+00:00",
+      "result": "pass",
+      "note": "Sentinel-2 STAC returns fresh scenes keylessly; open license; 5-day revisit; stdlib pixel-read risk noted"
+    },
+    "G1": {
+      "started": null,
+      "finished": null,
+      "result": null,
+      "note": ""
+    },
+    "G2": {
+      "started": null,
+      "finished": null,
+      "result": null,
+      "note": ""
+    },
+    "G3": {
+      "started": null,
+      "finished": null,
+      "result": null,
+      "note": ""
+    },
+    "PLAN": {
+      "started": null,
+      "finished": null,
+      "result": null,
+      "note": ""
+    }
+  },
+  "merge_candidates": [],
+  "created": "2026-10-26T11:05:53+00:00",
+  "updated": "2026-10-26T11:07:27+00:00"
+}

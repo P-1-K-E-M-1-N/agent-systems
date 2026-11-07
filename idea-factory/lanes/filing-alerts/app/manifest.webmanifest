@@ -1,0 +1,24 @@
+{
+  "name": "Filing Alerts",
+  "short_name": "Filings",
+  "description": "Michigan companies' SEC 8-K filings in plain words, refreshed daily",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#1c3d5a",
+  "theme_color": "#1c3d5a",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

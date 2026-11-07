@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>{{TITLE}}</title>
+<meta name="description" content="{{DESC}}">
+<meta name="theme-color" content="{{COLOR}}">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="assets/factory.css">
+<style>
+/* Lane-specific tokens and styles go here. Override --acc, --acc-fg and the map colors to give the product its own look. */
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><img src="icons/icon.svg" alt=""><h1>{{TITLE}}</h1></div>
+    <span class="spacer"></span>
+    <button class="btn small" data-install hidden onclick="Factory.install()">Install app</button>
+  </header>
+  <div class="main">
+    <section class="mapwrap"><div id="map" class="map" aria-label="Map"></div></section>
+    <aside class="panel" id="panel"><div class="empty">Starter page written by core.webapp. The lane agent replaces index.html and app.js.</div></aside>
+  </div>
+</div>
+<script src="assets/factory.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+[
+  {
+    "order": 1,
+    "slug": "permit-radar",
+    "name": "Permit Radar",
+    "type": "revenue",
+    "pitch": "Weekly Detroit-area building-permit lead lists for trades (roofers, electricians, HVAC, plumbers, dumpster rental), ~$30/month. Sources: data.detroitmi.gov permits; check Royal Oak and Oakland County. Address, permit details and contractor of record only; no homeowner enrichment."
+  },
+  {
+    "order": 2,
+    "slug": "storm-lead",
+    "name": "Storm Lead",
+    "type": "revenue",
+    "pitch": "Morning-after alerts for Michigan roofing/restoration contractors listing ZIPs hit by hail 1in+ or damaging wind, $50-100/month. Sources: NOAA SPC storm reports, NWS alerts, OpenFEMA. G0 includes a 24-month Michigan backtest of alert frequency."
+  },
+  {
+    "order": 3,
+    "slug": "great-lakes-conditions",
+    "name": "Great Lakes Conditions",
+    "type": "traffic",
+    "pitch": "One auto-updating page per Michigan lake, harbor and launch (waves, wind, water temp, water level, advisories). Launch target April 1, 2027. Sources: NOAA NDBC, GLERL/GLOS, NWS marine forecasts, NOAA CO-OPS, Open-Meteo."
+  },
+  {
+    "order": 4,
+    "slug": "recall-checks",
+    "name": "Recall Checks for Used-Car Dealers",
+    "type": "revenue",
+    "pitch": "Open-recall checks on dealer inventory via NHTSA vPIC + recalls API."
+  },
+  {
+    "order": 5,
+    "slug": "contract-winner-intel",
+    "name": "Contract-Winner Intel (BidRadar add-on)",
+    "type": "revenue",
+    "pitch": "Who won what, as a BidRadar add-on. Source: USAspending API."
+  },
+  {
+    "order": 6,
+    "slug": "benchmarking-backend",
+    "name": "Benchmarking Compliance Backend",
+    "type": "revenue",
+    "pitch": "ENERGY STAR Portfolio Manager web services; access requires approval, so draft the request for Nick."
+  },
+  {
+    "order": 7,
+    "slug": "weather-trigger-jobs",
+    "name": "Weather-Trigger Job Alerts",
+    "type": "revenue",
+    "pitch": "Alerts for roofers, landscapers and venues from the NWS API. May merge with Storm Lead."
+  },
+  {
+    "order": 8,
+    "slug": "site-selection",
+    "name": "Site-Selection Reports",
+    "type": "revenue",
+    "pitch": "Reports for new shop owners from the Census API."
+  },
+  {
+    "order": 9,
+    "slug": "satellite-change",
+    "name": "Satellite Change Alerts",
+    "type": "revenue",
+    "pitch": "Change alerts for land owners and farmers from Copernicus Sentinel-2."
+  },
+  {
+    "order": 10,
+    "slug": "filing-alerts",
+    "name": "Filing Alerts (SEC EDGAR)",
+    "type": "revenue",
+    "pitch": "Niche filing alerts, e.g. Michigan companies' 8-Ks."
+  },
+  {
+    "order": 11,
+    "slug": "supplier-news",
+    "name": "Supplier News Monitor",
+    "type": "revenue",
+    "pitch": "Supplier news monitor from GDELT."
+  },
+  {
+    "order": 12,
+    "slug": "energy-cost-pages",
+    "name": "Energy Cost by Area Pages",
+    "type": "traffic",
+    "pitch": "EIA API pages."
+  },
+  {
+    "order": 13,
+    "slug": "river-levels",
+    "name": "River Levels for Paddlers",
+    "type": "traffic",
+    "pitch": "USGS Water Services. May merge with Great Lakes Conditions."
+  },
+  {
+    "order": 14,
+    "slug": "air-quality-alerts",
+    "name": "Air-Quality Alerts for Schools and Youth Sports",
+    "type": "traffic",
+    "pitch": "AirNow."
+  },
+  {
+    "order": 15,
+    "slug": "food-drug-recalls",
+    "name": "Food and Drug Recall Alerts",
+    "type": "traffic",
+    "pitch": "openFDA alerts for restaurants, daycares, pharmacies."
+  },
+  {
+    "order": 16,
+    "slug": "rare-bird-alerts",
+    "name": "Rare-Bird Alerts",
+    "type": "traffic",
+    "pitch": "eBird API. Check terms first; likely KILL for commercial use."
+  },
+  {
+    "order": 17,
+    "slug": "ev-road-trip",
+    "name": "EV Road-Trip Planner",
+    "type": "traffic",
+    "pitch": "NREL Alt Fuel Stations. Crowded market."
+  },
+  {
+    "order": 18,
+    "slug": "next-bus-displays",
+    "name": "Next-Bus Lobby Displays",
+    "type": "revenue",
+    "pitch": "GTFS / GTFS-Realtime displays for coffee shops and apartments."
+  },
+  {
+    "order": 19,
+    "slug": "michigan-spirits-price-watch",
+    "name": "Michigan Spirits Price Watch",
+    "type": "revenue",
+    "pitch": "monthly \"what's changing\" digest plus a POS-ready price file for party stores and bars, and one public page per bottle (\"Tito's 1.75L price Michigan\"). Idea Scout 2026-10-25, 21/25. Source(s): MLCC Spirits Price Book (fixed-width TXT, monthly, no key; no license stated, state public record, confirm with MLCC before charging)."
+  },
+  {
+    "order": 20,
+    "slug": "michigan-site-contamination-check",
+    "name": "Michigan Site Contamination Check",
+    "type": "revenue",
+    "pitch": "enter an address, get a $29-49 PDF listing Part 201 contamination sites, leaking USTs, brownfields and land-use restrictions within 1/8 and 1/4 mile, for commercial realtors, small buyers and community lenders before they pay for a Phase I. Idea Scout 2026-11-01, 19/25. Source(s): EGLE RRD Open Data ArcGIS REST (no key; FAQ says no use restrictions, confirm on gis-egle terms page; drop the project-manager name field)."
+  },
+  {
+    "order": 21,
+    "slug": "recall-check-for-kids-resale-shops",
+    "name": "Recall Check for Kids' Resale Shops",
+    "type": "revenue",
+    "pitch": "intake checker plus a weekly \"pull these items\" alert for strollers, cribs, car seats and toys sold by consignment shops. Idea Scout 2026-10-25, 19/25. Source(s): CPSC Recalls API (REST/JSON, no key, federal data)."
+  },
+  {
+    "order": 22,
+    "slug": "new-liquor-license-leads-mi",
+    "name": "New Liquor License Leads MI",
+    "type": "revenue",
+    "pitch": "weekly list of newly licensed bars, restaurants and party stores by county, sold to POS/payment reps, beverage distributors, liquor-liability insurers, linen and pest vendors; doubles as the customer list for Spirits Price Watch. Idea Scout 2026-10-25, 18/25. Source(s): MLCC Listing of Active, Conditional and Escrowed Licenses (weekly XLSX, no key; business name, address and license type only)."
+  },
+  {
+    "order": 23,
+    "slug": "michigan-road-construction-pages",
+    "name": "Michigan Road Construction Pages",
+    "type": "traffic",
+    "pitch": "one page per corridor and county (\"I-696 construction 2027\") listing planned MDOT projects, plus an add-on for fleets and businesses on affected roads. Idea Scout 2026-10-25, 16/25. Source(s): MDOT Five-Year Transportation Program (ArcGIS REST, CSV, GeoJSON, no key; confirm license and look for the newer program than the 2025-2029 draft)."
+  },
+  {
+    "order": 24,
+    "slug": "michigan-section-8-rent-limits-by-zip",
+    "name": "Michigan Section 8 Rent Limits by ZIP",
+    "type": "traffic",
+    "pitch": "one page per Michigan ZIP with FY2027 Small Area FMRs by bedroom, change vs FY2026, plus a landlord alert when HUD revises; needs a Michigan angle (MSHDA and Detroit Housing Commission payment standards) to beat the free Fair Market Rent Map. Idea Scout 2026-11-01, 16/25. Source(s): HUD FY2027 Fair Market Rents + HUD User FMR API (free token, 60 calls/min; must show the HUD User non-endorsement notice)."
+  }
+]

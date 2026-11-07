@@ -1,0 +1,46 @@
+{
+  "slug": "weather-trigger-jobs",
+  "name": "Weather-Trigger Job Alerts",
+  "type": "revenue",
+  "order": 7,
+  "pitch": "Alerts for roofers, landscapers and venues from the NWS API. May merge with Storm Lead.",
+  "gate": "G3",
+  "status": "parked",
+  "blocker": "",
+  "next_step": "Parked at G3 (17/25, demand evidence absent). Fold the forecast go/no-go view into storm-lead if that lane reaches GO.",
+  "gates": {
+    "G0": {
+      "started": "2026-10-25T11:03:58+00:00",
+      "finished": "2026-10-25T11:04:39+00:00",
+      "result": "pass",
+      "note": "NWS alerts and hourly forecast work, public domain"
+    },
+    "G1": {
+      "started": "2026-10-28T11:05:37+00:00",
+      "finished": "2026-10-28T11:07:54+00:00",
+      "result": "pass",
+      "note": "go/risky/hold map app on live NWS hourly forecasts, 8 cities, 3 trades"
+    },
+    "G2": {
+      "started": "2026-10-29T11:08:47+00:00",
+      "finished": "2026-10-29T11:09:00+00:00",
+      "result": "pass",
+      "note": "14 targets, outreach pack and send sheet written"
+    },
+    "G3": {
+      "started": "2026-11-02T00:01:04+00:00",
+      "finished": "2026-11-02T00:01:32+00:00",
+      "result": "pass",
+      "note": "PARK 17/25 final (demand evidence absent); merge candidate storm-lead"
+    },
+    "PLAN": {
+      "started": null,
+      "finished": null,
+      "result": null,
+      "note": ""
+    }
+  },
+  "merge_candidates": [],
+  "created": "2026-10-24T11:01:06+00:00",
+  "updated": "2026-11-02T00:01:32+00:00"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Storm Lead",
+  "short_name": "Storm Lead",
+  "description": "Morning-after hail and wind map for Michigan roofers",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#1b3a5c",
+  "theme_color": "#1b3a5c",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "slug": "weather-trigger-jobs",
+  "demand": 2,
+  "repeat_use": 4,
+  "competition": 2,
+  "license": 5,
+  "build_effort": 4,
+  "reasons": {
+    "demand": "Nick skipped the 14-form outreach on 2026-11-01 with no notes; no replies or search volumes, so demand evidence is absent (CLAUDE.md rule 8)",
+    "repeat_use": "Daily go/no-go decisions in season",
+    "competition": "Free NWS forecasts and weather apps already serve every target; only trade-specific thresholds differentiate",
+    "license": "NWS API is public domain",
+    "build_effort": "Forecast go/no-go web app and refresh.py already built at G1"
+  },
+  "merge_with": [
+    "storm-lead"
+  ],
+  "decision": "PARK",
+  "decision_reason": "Total 17/25. Consider merging with storm-lead.",
+  "scored_on": "2026-11-01",
+  "provisional": false,
+  "total": 17
+}

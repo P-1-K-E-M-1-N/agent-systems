@@ -1,0 +1,46 @@
+{
+  "slug": "contract-winner-intel",
+  "name": "Contract-Winner Intel (BidRadar add-on)",
+  "type": "revenue",
+  "order": 5,
+  "pitch": "Who won what, as a BidRadar add-on. Source: USAspending API.",
+  "gate": "G2",
+  "status": "active",
+  "blocker": "",
+  "next_step": "G2 demand test",
+  "gates": {
+    "G0": {
+      "started": "2026-10-25T11:03:58+00:00",
+      "finished": "2026-10-25T11:04:39+00:00",
+      "result": "pass",
+      "note": "USAspending POST works, public domain"
+    },
+    "G1": {
+      "started": "2026-10-26T11:09:38+00:00",
+      "finished": "2026-10-26T11:09:38+00:00",
+      "result": "pass",
+      "note": "web app on live USAspending data, map + filters, webapp check OK"
+    },
+    "G2": {
+      "started": null,
+      "finished": null,
+      "result": null,
+      "note": ""
+    },
+    "G3": {
+      "started": null,
+      "finished": null,
+      "result": null,
+      "note": ""
+    },
+    "PLAN": {
+      "started": null,
+      "finished": null,
+      "result": null,
+      "note": ""
+    }
+  },
+  "merge_candidates": [],
+  "created": "2026-10-24T11:01:06+00:00",
+  "updated": "2026-10-31T11:06:16+00:00"
+}

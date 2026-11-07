@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Recall Checks</title>
+<meta name="description" content="Open safety recalls on your lot, checked weekly against NHTSA">
+<meta name="theme-color" content="#16232d">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="assets/factory.css">
+<style>
+/* Recall Checks identity: asphalt and petrol blue, amber for the lot badge, safety red only on the critical tier. */
+:root{
+  --acc:#15607a;--acc-fg:#ffffff;--lot:#b9771a;
+  --crit:#b3261e;--ser:#b7791f;--mod:#3f6fae;--clean:#2e7d4f;--unk:#6b7480;
+  --bg:#eef0f2;--line:#d3d8de;--card:#ffffff;--card2:#e9edf1;
+  --radius:10px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --acc:#5cc1dd;--acc-fg:#07141b;--lot:#e0a84a;
+  --crit:#ec6a60;--ser:#d4a040;--mod:#6ea1dc;--clean:#5fbf86;--unk:#8e98a5;
+  --bg:#0f1317;--line:#262d35;--card:#171c22;--card2:#1e252d;}}
+:root[data-theme="dark"]{
+  --acc:#5cc1dd;--acc-fg:#07141b;--lot:#e0a84a;
+  --crit:#ec6a60;--ser:#d4a040;--mod:#6ea1dc;--clean:#5fbf86;--unk:#8e98a5;
+  --bg:#0f1317;--line:#262d35;--card:#171c22;--card2:#1e252d;}
+
+body{font-size:15px}
+.topbar{padding-top:9px;padding-bottom:9px}
+.topbar h1{font-size:17px;letter-spacing:-.01em}
+.topbar .brand img{border-radius:8px}
+.page{gap:14px;padding-top:14px}
+@media (min-width:860px){.page{gap:18px;padding-top:22px}}
+
+/* Lot header */
+.lothead{display:flex;flex-direction:column;gap:12px;padding:14px 16px 16px;border-top:4px solid var(--acc)}
+.lothead .title{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.lothead .title h2{font-size:22px;font-weight:700;letter-spacing:-.015em}
+.lothead .checked{font-size:13px;color:var(--mute)}
+.lottag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--lot);
+  border:1px solid color-mix(in srgb,var(--lot) 55%,transparent);border-radius:4px;padding:2px 7px}
+.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (min-width:600px){.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.kpi{padding:10px 12px 9px;border-left:3px solid var(--line)}
+.kpi b{font-size:28px;letter-spacing:-.02em}
+.kpi.crit{border-left-color:var(--crit)}
+.kpi.crit b{color:var(--crit)}
+.kpi.acc{border-left-color:var(--acc)}
+.kpi small{display:block;font-size:11.5px;color:var(--mute);margin-top:2px}
+
+/* Severity strip */
+.strip{display:flex;flex-direction:column;gap:7px}
+.strip .bar{display:flex;gap:2px;height:14px;border-radius:4px;overflow:hidden;background:var(--card2)}
+.strip .bar span{display:block;min-width:3px}
+.strip .lg{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px}
+.strip .lg span{display:inline-flex;align-items:center;gap:6px}
+.strip .lg i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.strip .lg b{font-variant-numeric:tabular-nums}
+.c-critical{background:var(--crit)}.c-serious{background:var(--ser)}.c-moderate{background:var(--mod)}
+
+/* Honesty block and this-week list */
+details.honest{border:1px solid var(--line);border-left:3px solid var(--ser);border-radius:var(--radius);background:var(--card);padding:0 14px}
+details.honest summary{cursor:pointer;padding:11px 0;font-size:14px;line-height:1.4;list-style:none;display:flex;gap:10px;align-items:flex-start}
+details.honest summary::-webkit-details-marker{display:none}
+details.honest summary .chev{flex:none;margin-top:3px;width:14px;height:14px;transition:transform .15s}
+details.honest[open] summary .chev{transform:rotate(90deg)}
+details.honest .body{padding:0 0 12px 24px;font-size:13.5px;color:var(--mute)}
+details.honest .body p{margin:0 0 6px}
+.week ol{margin:6px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.week li{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;padding:9px 10px;border-radius:8px;background:var(--card2);font-size:13.5px}
+.week li .stk{font:600 12.5px var(--mono);padding:2px 6px;border-radius:4px;background:var(--card);border:1px solid var(--line);white-space:nowrap}
+.week li .why{color:var(--mute)}
+.week .tip{margin:10px 0 0;font-size:12.5px;color:var(--mute)}
+
+/* Toolbar */
+.toolbar{display:flex;flex-direction:column;gap:8px;position:sticky;top:50px;z-index:10;background:var(--bg);padding:6px 0}
+.seg{display:flex;gap:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--card)}
+.seg button{flex:1;appearance:none;border:0;background:transparent;color:var(--fg);font:inherit;font-size:13px;font-weight:600;padding:8px 4px;cursor:pointer;white-space:nowrap}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--acc);color:var(--acc-fg)}
+.seg button small{display:block;font-size:11px;font-weight:500;opacity:.75}
+.toolbar .row{justify-content:space-between}
+.toolbar input[type=search]{padding:9px 12px;font-size:15px}
+.count{font-size:12.5px;color:var(--mute);white-space:nowrap}
+@media (min-width:860px){.toolbar{flex-direction:row;align-items:center}.seg{flex:0 0 auto}.seg button{padding:8px 14px}.toolbar input[type=search]{max-width:360px}}
+
+/* Vehicle cards */
+.cards{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+@media (min-width:860px){.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}}
+.veh{display:flex;flex-direction:column;gap:10px;padding:12px 14px 12px;border-left:4px solid var(--unk)}
+.veh.s-critical{border-left-color:var(--crit)}.veh.s-serious{border-left-color:var(--ser)}.veh.s-moderate{border-left-color:var(--mod)}
+.veh.s-clean{border-left-color:var(--clean)}
+.veh .head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.veh .stk{font:650 12.5px var(--mono);padding:2px 7px;border-radius:4px;background:var(--card2);letter-spacing:.02em}
+.veh .n{font-size:12.5px;color:var(--mute);margin-left:auto;white-space:nowrap}
+.veh .name{font-size:17px;font-weight:650;letter-spacing:-.01em;line-height:1.25}
+.veh .name small{font-weight:500;color:var(--mute);font-size:13px;margin-left:6px}
+.sev{display:inline-flex;align-items:center;gap:6px;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+.sev::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.sev.critical{background:color-mix(in srgb,var(--crit) 14%,transparent);color:var(--crit)}
+.sev.serious{background:color-mix(in srgb,var(--ser) 18%,transparent);color:var(--ser)}
+.sev.moderate{background:color-mix(in srgb,var(--mod) 16%,transparent);color:var(--mod)}
+.sev.clean{background:color-mix(in srgb,var(--clean) 16%,transparent);color:var(--clean)}
+.sev.unknown{background:color-mix(in srgb,var(--unk) 16%,transparent);color:var(--unk)}
+.adv{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:5px;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--crit);color:#fff}
+.vin{display:flex;align-items:center;gap:8px;background:var(--card2);border-radius:7px;padding:7px 8px 7px 10px}
+.vin code{font:600 14px/1.2 var(--mono);letter-spacing:.06em;flex:1;min-width:0;overflow-wrap:anywhere;color:var(--fg)}
+.vin.none code{font-weight:500;letter-spacing:0;color:var(--mute);font-size:12.5px;font-family:var(--sans)}
+.vin .btn.small{flex:none;padding:3px 9px}
+.vin .note{font-size:11.5px;color:var(--mute)}
+.worst{display:flex;flex-direction:column;gap:4px;font-size:13.5px}
+.worst .comp{font-weight:650}
+.worst .lbl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin-right:6px}
+.worst .fix{color:var(--mute)}
+.worst .fix b{color:var(--fg);font-weight:600}
+.camps{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.camps a{font:600 12px var(--mono);text-decoration:none;color:var(--acc);border:1px solid var(--line);border-radius:5px;padding:2px 7px;background:var(--card)}
+.camps a:hover{background:var(--card2)}
+.camps .more{appearance:none;border:0;background:transparent;color:var(--acc);font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;padding:2px 4px}
+.veh .meta{font-size:12.5px;color:var(--mute);display:flex;gap:12px;flex-wrap:wrap}
+.all{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+.all li{display:grid;grid-template-columns:8px 1fr;gap:8px;align-items:start;padding:7px 9px;border-radius:7px;background:var(--card2);font-size:12.5px}
+.all li i{width:8px;height:8px;border-radius:50%;margin-top:5px;display:block}
+.all li .t{display:flex;gap:8px;flex-wrap:wrap;align-items:baseline}
+.all li .t a{font:600 12px var(--mono);color:var(--acc);text-decoration:none}
+.all li .t .d{color:var(--mute);margin-left:auto;white-space:nowrap}
+.all li p{margin:3px 0 0;color:var(--mute)}
+.all li p b{color:var(--fg);font-weight:600}
+
+/* Check a vehicle */
+.check form{display:grid;grid-template-columns:1fr;gap:8px}
+.check .or{font-size:12px;color:var(--mute);text-align:center;letter-spacing:.08em;text-transform:uppercase}
+.check .ymm{display:grid;grid-template-columns:88px 1fr 1fr;gap:8px}
+.check input{padding:9px 12px;font-size:15px}
+.check .result{margin-top:12px}
+.check .status{font-size:13px;color:var(--mute);margin-top:8px;min-height:1.2em}
+.check .origin{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acc);margin-bottom:6px}
+@media (min-width:860px){.check form{grid-template-columns:1fr auto 1.6fr auto;align-items:end}.check .or{align-self:center;padding:0 6px}}
+
+.foot{display:flex;flex-direction:column;gap:6px;padding-top:14px;line-height:1.5}
+.foot .row{justify-content:space-between}
+.foot a{color:var(--acc)}
+#themebtn{min-width:34px;justify-content:center}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><img src="icons/icon.svg" alt=""><h1>Recall Checks</h1></div>
+    <span class="spacer"></span>
+    <button class="btn small" id="themebtn" type="button" aria-label="Switch light or dark" title="Light / dark">◐</button>
+    <button class="btn small primary" data-install hidden type="button" onclick="Factory.install()">Install</button>
+  </header>
+
+  <main class="page">
+    <section class="card lothead" id="lothead">
+      <div class="title">
+        <h2 id="lotname">Example lot</h2>
+        <span class="lottag" id="lottag">example stock</span>
+        <span class="checked" id="checked">Loading the latest check…</span>
+      </div>
+      <div class="kpis" id="kpis" aria-label="Lot numbers"></div>
+      <div class="strip" id="strip" aria-label="Campaigns by severity"></div>
+    </section>
+
+    <details class="honest" id="honest">
+      <summary>
+        <svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span id="honest-line">NHTSA's free data says a campaign exists for this year, make and model; it cannot say whether this exact car was already repaired. Confirm at the dealer portal or safercar.gov with the VIN before sale.</span>
+      </summary>
+      <div class="body">
+        <p>Every number here counts NHTSA safety campaigns that <b>apply</b> to the year, make and model. A previous owner may already have had the work done, and some campaigns cover only a build-date window, so the true count for a given car is usually lower.</p>
+        <p>The free VIN-level answer is NHTSA's own lookup at <a href="https://www.nhtsa.gov/recalls" target="_blank" rel="noopener">nhtsa.gov/recalls</a> (up to 100 VINs at a time) or the manufacturer's dealer portal. This page tells you which cars are worth that minute.</p>
+        <p>Severity is our reading of NHTSA's component and consequence text: <b>critical</b> is a do-not-drive or park-outside advisory, or brakes, steering, air bags, fuel or fire; <b>serious</b> is seat belts, wheels, suspension, hood or latch, stalling or rollaway; <b>moderate</b> is everything else.</p>
+      </div>
+    </details>
+
+    <section class="card week" id="week" aria-labelledby="week-h">
+      <h3 id="week-h">What to do this week</h3>
+      <ol id="week-list"></ol>
+      <p class="tip" id="week-tip"></p>
+    </section>
+
+    <div class="toolbar" id="toolbar">
+      <div class="seg" role="group" aria-label="Filter vehicles" id="filters">
+        <button type="button" data-f="all" aria-pressed="true">All <small id="f-all">–</small></button>
+        <button type="button" data-f="with" aria-pressed="false">With campaigns <small id="f-with">–</small></button>
+        <button type="button" data-f="critical" aria-pressed="false">Critical <small id="f-critical">–</small></button>
+        <button type="button" data-f="clean" aria-pressed="false">Clean <small id="f-clean">–</small></button>
+      </div>
+      <div class="row">
+        <input type="search" id="q" placeholder="Search stock, VIN, make or model" autocomplete="off" aria-label="Search vehicles">
+        <span class="count" id="count"></span>
+      </div>
+    </div>
+
+    <section class="cards" id="lot" aria-live="polite"></section>
+
+    <section class="card check" id="check">
+      <h2>Check a vehicle</h2>
+      <p class="mute" style="margin:4px 0 10px;font-size:13.5px">Searches this week's snapshot first, then NHTSA live when the app can reach it.</p>
+      <form id="checkform" novalidate>
+        <label><span class="mute" style="font-size:12px">VIN (17 characters)</span>
+          <input type="text" id="c-vin" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="1FTFW1ET5DFC10312" maxlength="17"></label>
+        <div class="or">or</div>
+        <div class="ymm">
+          <label><span class="mute" style="font-size:12px">Year</span><input type="text" inputmode="numeric" id="c-year" placeholder="2016" maxlength="4"></label>
+          <label><span class="mute" style="font-size:12px">Make</span><input type="text" id="c-make" placeholder="Ford" autocomplete="off"></label>
+          <label><span class="mute" style="font-size:12px">Model</span><input type="text" id="c-model" placeholder="Escape" autocomplete="off"></label>
+        </div>
+        <button class="btn primary" type="submit" id="c-go">Check</button>
+      </form>
+      <div class="status" id="c-status"></div>
+      <div class="result" id="c-result"></div>
+    </section>
+
+    <footer class="foot">
+      <div>Data: <a href="https://vpic.nhtsa.dot.gov/api/" target="_blank" rel="noopener">NHTSA vPIC VIN decoder</a> and the <a href="https://www.nhtsa.gov/nhtsa-datasets-and-apis" target="_blank" rel="noopener">NHTSA Recalls API</a>, US Government works in the public domain. Not affiliated with NHTSA. No owner or buyer data is used or stored; the lot above is example stock with public example VINs.</div>
+      <div class="row"><span id="refreshed">Refreshed —</span><button class="btn small" data-install hidden type="button" onclick="Factory.install()">Install on this phone</button></div>
+    </footer>
+  </main>
+</div>
+<script src="assets/factory.js"></script>
+<script src="data/latest.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

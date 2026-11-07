@@ -1,0 +1,38 @@
+{
+  "sources": [
+    {
+      "id": "nhtsa_web",
+      "name": "NHTSA website pages (terms, datasets-and-APIs page, VIN recall lookup tool page)",
+      "owner": "US DOT NHTSA",
+      "base_url": "https://www.nhtsa.gov/",
+      "terms_url": "https://www.nhtsa.gov/web-policies-and-notices",
+      "license": "US Government work, public domain (web content); the consumer VIN lookup tool is a web form, not an API",
+      "commercial_ok": true,
+      "attribution": "Source: NHTSA",
+      "update_frequency": "n/a (read for terms at G0 only)",
+      "rate_limit": "none published; site sits behind a WAF that blocks generic fetchers",
+      "key_env": "",
+      "cache_ttl_s": 604800,
+      "daily_budget": 30,
+      "min_interval_s": 1.0,
+      "notes": "Registered only so G0 can read NHTSA's own terms and tool descriptions through core.fetch. Not a product data source. Never scrape the VIN lookup tool."
+    },
+    {
+      "id": "nhtsa_odi_flatfiles",
+      "name": "NHTSA ODI recall flat files (FLAT_RCL.zip, daily bulk download)",
+      "owner": "US DOT NHTSA Office of Defects Investigation",
+      "base_url": "https://static.nhtsa.gov/odi/ffdd/rcl/",
+      "terms_url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis",
+      "license": "US Government work, public domain",
+      "commercial_ok": true,
+      "attribution": "Source: NHTSA Office of Defects Investigation",
+      "update_frequency": "daily (file regenerated nightly)",
+      "rate_limit": "none published; one ~tens-of-MB zip per download, so fetch at most once a day",
+      "key_env": "",
+      "cache_ttl_s": 86400,
+      "daily_budget": 5,
+      "min_interval_s": 2.0,
+      "notes": "Bulk alternative to the recalls API for a weekly refresh across a whole inventory: one download instead of one call per year/make/model. RCL.txt layout documented in the same folder."
+    }
+  ]
+}

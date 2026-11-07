@@ -1,0 +1,46 @@
+{
+  "slug": "filing-alerts",
+  "name": "Filing Alerts (SEC EDGAR)",
+  "type": "revenue",
+  "order": 10,
+  "pitch": "Niche filing alerts, e.g. Michigan companies' 8-Ks.",
+  "gate": "G2",
+  "status": "waiting_nick",
+  "blocker": "Nick to pick the buyer segment for Michigan 8-K alerts (no verified target list)",
+  "next_step": "Draft outreach or run keyword test per Nick's answer",
+  "gates": {
+    "G0": {
+      "started": "2026-10-30T11:06:32+00:00",
+      "finished": "2026-10-30T11:06:57+00:00",
+      "result": "pass",
+      "note": "SEC EDGAR live, public domain, MI state filter + submissions API work"
+    },
+    "G1": {
+      "started": "2026-11-04T11:17:02+00:00",
+      "finished": "2026-11-04T11:25:52+00:00",
+      "result": "pass",
+      "note": "Michigan 8-K feed web app on live SEC data; 13 companies/22 filings, coverage still growing; webapp check OK"
+    },
+    "G2": {
+      "started": "2026-11-05T11:16:57+00:00",
+      "finished": null,
+      "result": null,
+      "note": "demand test: find buyers"
+    },
+    "G3": {
+      "started": null,
+      "finished": null,
+      "result": null,
+      "note": ""
+    },
+    "PLAN": {
+      "started": null,
+      "finished": null,
+      "result": null,
+      "note": ""
+    }
+  },
+  "merge_candidates": [],
+  "created": "2026-10-30T11:05:59+00:00",
+  "updated": "2026-11-05T11:16:57+00:00"
+}

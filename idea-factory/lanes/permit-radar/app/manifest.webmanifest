@@ -1,0 +1,24 @@
+{
+  "name": "Permit Radar",
+  "short_name": "Permits",
+  "description": "Last week's Detroit permits for your trade, every Monday",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#1c1f26",
+  "theme_color": "#1c1f26",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

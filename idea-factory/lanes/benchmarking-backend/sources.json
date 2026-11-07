@@ -1,0 +1,21 @@
+{
+  "sources": [
+    {
+      "commercial_ok": true,
+      "key_env": "",
+      "cache_ttl_s": 21600,
+      "daily_budget": 300,
+      "min_interval_s": 0.5,
+      "id": "energystar_pm_ws",
+      "name": "ENERGY STAR Portfolio Manager Web Services",
+      "owner": "U.S. EPA ENERGY STAR",
+      "base_url": "https://portfoliomanager.energystar.gov/ws",
+      "terms_url": "https://portfoliomanager.energystar.gov/pdf/reference/Web%20Services%20API%20Terms%20of%20Use.pdf",
+      "license": "Web Services API Terms of Use (Sept 2026): free for organizations exchanging building data with Portfolio Manager, including on behalf of customers; no ban on paid services. Obligations: develop in the test environment first, respect rate limits, use ENERGY STAR marks per the brand book.",
+      "attribution": "",
+      "update_frequency": "real time (account data)",
+      "rate_limit": "unpublished",
+      "notes": "Account-gated: unauthenticated calls return 401. Test environment is self-service (pmtest account + Software Development tab); live provider access is requested from inside the live account after testing. Customer data belongs to customers, not public data. Terms read 2026-10-28; recorded 2026-11-01 from FROM_NICK entry 60be9f3aaedc."
+    }
+  ]
+}

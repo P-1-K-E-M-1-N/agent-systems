@@ -1,0 +1,24 @@
+{
+  "name": "Site Check",
+  "short_name": "Site Check",
+  "description": "Where Michigan has room for one more shop: residents per existing shop by county, plus ZIP demographics",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#2f6b4f",
+  "theme_color": "#2f6b4f",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

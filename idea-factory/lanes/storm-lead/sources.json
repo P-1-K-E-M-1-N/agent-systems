@@ -1,0 +1,43 @@
+{
+  "sources": [
+    {
+      "id": "noaa_spc_reports",
+      "daily_budget": 2000,
+      "notes": "Files: YYMMDD_rpts_hail.csv, _wind.csv, _torn.csv (preliminary, local-storm-report based). Hail size in hundredths of an inch; wind speed in mph (UNK = damage report with no measured speed). Lane storm-lead raises the daily budget to 2000 for the 24-month backtest; the fetcher cache makes re-runs free."
+    },
+    {
+      "id": "noaa_spc_wcm",
+      "name": "NOAA SPC Warning Coordination Meteorologist severe weather database (bulk CSV)",
+      "owner": "NOAA / NWS Storm Prediction Center",
+      "base_url": "https://www.spc.noaa.gov/wcm/data/",
+      "terms_url": "https://www.weather.gov/disclaimer",
+      "license": "US Government work, public domain",
+      "commercial_ok": true,
+      "attribution": "Source: NOAA Storm Prediction Center severe weather database",
+      "update_frequency": "annual (final Storm Data) plus year-to-date files refreshed periodically",
+      "rate_limit": "none published; files are 10-100 MB",
+      "key_env": "",
+      "cache_ttl_s": 604800,
+      "daily_budget": 50,
+      "min_interval_s": 1.0,
+      "notes": "Bulk files such as 1955-2024_hail.csv / 1955-2024_wind.csv (final) and per-year files. Used for the backtest where available; daily report files fill the gap."
+    },
+    {
+      "id": "census_gazetteer",
+      "name": "US Census Bureau Gazetteer Files (ZCTA centroids)",
+      "owner": "US Census Bureau",
+      "base_url": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/",
+      "terms_url": "https://www.census.gov/about/policies/open-gov/open-data.html",
+      "license": "US Government work, public domain",
+      "commercial_ok": true,
+      "attribution": "ZIP Code Tabulation Area centroids: US Census Bureau Gazetteer Files",
+      "update_frequency": "annual",
+      "rate_limit": "none published; national ZCTA file is ~1-2 MB",
+      "key_env": "",
+      "cache_ttl_s": 2592000,
+      "daily_budget": 20,
+      "min_interval_s": 1.0,
+      "notes": "Used to map storm report lat/lon to nearest ZCTA (approximates ZIP code) by centroid distance."
+    }
+  ]
+}

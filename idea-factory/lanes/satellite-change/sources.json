@@ -1,0 +1,21 @@
+{
+  "sources": [
+    {
+      "id": "earth_search_stac",
+      "name": "Element 84 Earth Search STAC API (Sentinel-2 L2A on AWS Open Data)",
+      "owner": "Element 84 / ESA Copernicus",
+      "base_url": "https://earth-search.aws.element84.com/v1",
+      "terms_url": "https://registry.opendata.aws/sentinel-2-l2a-cogs/",
+      "license": "Copernicus Sentinel data: free, full and open for any use including commercial (Regulation (EU) 1159/2013); STAC index public. Attribution: Contains modified Copernicus Sentinel data.",
+      "attribution": "Contains modified Copernicus Sentinel data.",
+      "commercial_ok": true,
+      "update_frequency": "new Sentinel-2 scenes within about 1-2 days of acquisition, ~5-day revisit per tile",
+      "rate_limit": "none published; be polite",
+      "key_env": "",
+      "cache_ttl_s": 21600,
+      "daily_budget": 200,
+      "min_interval_s": 0.5,
+      "notes": "No key. Metadata + cloud-optimised GeoTIFF links; pixel reads via range requests."
+    }
+  ]
+}

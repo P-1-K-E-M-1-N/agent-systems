@@ -1,0 +1,22 @@
+{
+  "sources": [
+    {
+      "commercial_ok": true,
+      "key_env": "CENSUS_API_KEY",
+      "cache_ttl_s": 21600,
+      "daily_budget": 300,
+      "min_interval_s": 0.5,
+      "id": "census_api",
+      "name": "U.S. Census Bureau Data API (ACS 5-year, CBP)",
+      "owner": "U.S. Census Bureau",
+      "base_url": "https://api.census.gov/data",
+      "terms_url": "https://www.census.gov/data/developers/about/terms-of-service.html",
+      "license": "US Government work, public domain; Census API terms of service apply (attribution of 'This product uses the Census Bureau Data API but is not endorsed or certified by the Census Bureau')",
+      "attribution": "This product uses the Census Bureau Data API but is not endorsed or certified by the Census Bureau.",
+      "update_frequency": "annual (ACS 5-year each December; County Business Patterns annual)",
+      "rate_limit": "500 requests/day/IP without key; free key lifts limit",
+      "notes": "Aggregate tract/ZIP/county statistics only, no individual-level data. Free key (env CENSUS_API_KEY) required for data queries.",
+      "key_param": "key"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "slug": "site-selection",
+  "name": "Site-Selection Reports",
+  "type": "revenue",
+  "order": 8,
+  "pitch": "Reports for new shop owners from the Census API.",
+  "gate": "G2",
+  "status": "active",
+  "blocker": "",
+  "next_step": "G2",
+  "gates": {
+    "G0": {
+      "started": "2026-10-25T11:03:58+00:00",
+      "finished": "2026-10-26T11:06:56+00:00",
+      "result": "pass",
+      "note": "Census ACS5 + CBP return real data with free key; public domain, annual"
+    },
+    "G1": {
+      "started": "2026-10-31T11:06:16+00:00",
+      "finished": "2026-10-31T11:06:16+00:00",
+      "result": "pass",
+      "note": "web app on live ACS+CBP data, county map + ZIP report, webapp check OK"
+    },
+    "G2": {
+      "started": null,
+      "finished": null,
+      "result": null,
+      "note": ""
+    },
+    "G3": {
+      "started": null,
+      "finished": null,
+      "result": null,
+      "note": ""
+    },
+    "PLAN": {
+      "started": null,
+      "finished": null,
+      "result": null,
+      "note": ""
+    }
+  },
+  "merge_candidates": [],
+  "created": "2026-10-24T11:01:06+00:00",
+  "updated": "2026-10-31T11:06:16+00:00"
+}

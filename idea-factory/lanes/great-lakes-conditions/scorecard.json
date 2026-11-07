@@ -1,0 +1,23 @@
+{
+  "slug": "great-lakes-conditions",
+  "demand": 2,
+  "repeat_use": 4,
+  "competition": 3,
+  "license": 5,
+  "build_effort": 4,
+  "reasons": {
+    "demand": "Measured (Keyword Planner, Oct 2024-Sep 2026, exported 2026-10-24): 3,800 searches/month in Michigan across 43 queries, 22 with any volume, none above Google's 500 bucket; 14,600/month US. Every harbor-specific and safety phrase shows no volume; people search by lake and metric. Under the 5k yardstick = weak.",
+    "repeat_use": "Boaters, anglers, paddlers and beach-goers check conditions every outing in season; water level draws year-round interest. Winter is thin because buoys are out.",
+    "competition": "Nick's incognito check: top results are NOAA's own marine forecast text pages, dated-looking and one metric per page. Page-level competition is weak, but the competitor is the authoritative government source, which is hard to outrank.",
+    "license": "All public domain (NDBC, CO-OPS, NWS, GLERL), no keys, verified live at G0. GLOS skipped and Open-Meteo not used per Nick (free tier non-commercial; Standard tier about USD 29/month, not paying).",
+    "build_effort": "core.fetch pulls all feeds and refresh.py builds a page; 1-2 weeks for a location table, static-site loop, hourly schedule and hosting. Smaller still if the design pivots to 6 per-lake pages."
+  },
+  "merge_with": [
+    "river-levels"
+  ],
+  "decision": "PARK",
+  "decision_reason": "Total 18/25. Demand evidence is weak (score 2), so no GO despite the total. Consider merging with river-levels.",
+  "scored_on": "2026-10-24",
+  "provisional": false,
+  "total": 18
+}

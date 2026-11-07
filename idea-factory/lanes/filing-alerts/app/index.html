@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Filing Alerts</title>
+<meta name="description" content="Michigan companies' SEC 8-K filings in plain words, refreshed daily">
+<meta name="theme-color" content="#1c3d5a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="assets/factory.css">
+<style>
+/* Filing Alerts identity: ledger navy and brass; red only for trouble filings. */
+:root{--acc:#1c3d5a;--acc-fg:#fff;--brass:#a8691a;--bg:#f1f2f0;--line:#d6d9d6;--card:#fff;--card2:#eceeec;
+  --deal:#2f6f9f;--money:#5d6b2f;--earn:#1c3d5a;--lead:#7b4a9a;--bad:#b3261e;--gov:#6b7480;--oth:#8a8f96;--radius:10px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--acc:#7fb2dc;--acc-fg:#081521;--brass:#e0a84a;--bg:#0f1316;--line:#262d33;--card:#171c21;--card2:#1e252b;
+  --deal:#6fb0e0;--money:#a9bd6a;--earn:#7fb2dc;--lead:#c295e0;--bad:#ec6a60;--gov:#97a1ad;--oth:#8e98a5}}
+:root[data-theme="dark"]{--acc:#7fb2dc;--acc-fg:#081521;--brass:#e0a84a;--bg:#0f1316;--line:#262d33;--card:#171c21;--card2:#1e252b;
+  --deal:#6fb0e0;--money:#a9bd6a;--earn:#7fb2dc;--lead:#c295e0;--bad:#ec6a60;--gov:#97a1ad;--oth:#8e98a5}
+body{font-size:15px}
+.page{display:flex;flex-direction:column;gap:14px;padding:14px 16px 40px;max-width:980px;margin:0 auto;width:100%;box-sizing:border-box}
+.head{padding:14px 16px;border-top:4px solid var(--brass)}
+.head h2{margin:0;font-size:22px;letter-spacing:-.015em}
+.head .sub{font-size:13px;color:var(--mute);margin-top:2px}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+@media(min-width:600px){.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.kpi{background:var(--card2);border-radius:8px;padding:9px 12px;border-left:3px solid var(--line)}
+.kpi b{display:block;font-size:26px;letter-spacing:-.02em}
+.kpi small{font-size:12px;color:var(--mute)}
+.kpi.bad{border-left-color:var(--bad)}.kpi.bad b{color:var(--bad)}
+.toolbar{position:sticky;top:50px;z-index:10;background:var(--bg);padding:6px 0;display:flex;flex-direction:column;gap:8px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.chip{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--fg);font:inherit;font-size:13px;font-weight:600;padding:6px 11px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--acc);color:var(--acc-fg);border-color:var(--acc)}
+.chip small{opacity:.7;margin-left:4px}
+.row{display:flex;gap:10px;align-items:center}
+.row input[type=search]{flex:1;padding:9px 12px;font-size:15px}
+.count{font-size:12.5px;color:var(--mute);white-space:nowrap}
+.day{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:8px 0 0}
+.feed{display:flex;flex-direction:column;gap:10px}
+.fil{padding:12px 14px;display:flex;flex-direction:column;gap:8px;border-left:4px solid var(--oth)}
+.fil.k-bad{border-left-color:var(--bad)}.fil.k-deal{border-left-color:var(--deal)}.fil.k-money{border-left-color:var(--money)}
+.fil.k-earnings{border-left-color:var(--earn)}.fil.k-leadership{border-left-color:var(--lead)}.fil.k-governance{border-left-color:var(--gov)}
+.fil .top{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.fil .co{font-size:17px;font-weight:650;letter-spacing:-.01em}
+.tick{font:650 12px var(--mono);padding:1px 6px;border-radius:4px;background:var(--card2)}
+.fil .time{margin-left:auto;font-size:12.5px;color:var(--mute);white-space:nowrap}
+.fil .meta{font-size:12.5px;color:var(--mute)}
+.what{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:12.5px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--card2)}
+.tag.bad{background:color-mix(in srgb,var(--bad) 15%,transparent);color:var(--bad)}
+.tag.deal{background:color-mix(in srgb,var(--deal) 15%,transparent);color:var(--deal)}
+.tag.money{background:color-mix(in srgb,var(--money) 18%,transparent);color:var(--money)}
+.tag.leadership{background:color-mix(in srgb,var(--lead) 15%,transparent);color:var(--lead)}
+.tag.earnings{background:color-mix(in srgb,var(--earn) 14%,transparent);color:var(--earn)}
+.acts{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.acts a{color:var(--acc);font-weight:600;font-size:13.5px}
+.star{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--mute);border-radius:6px;font-size:13px;padding:3px 9px;cursor:pointer;margin-left:auto}
+.star[aria-pressed="true"]{color:var(--brass);border-color:var(--brass);font-weight:700}
+.items{font:12px var(--mono);color:var(--mute)}
+details.honest{border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:var(--radius);background:var(--card);padding:0 14px}
+details.honest summary{cursor:pointer;padding:11px 0;font-size:14px}
+details.honest .body{padding:0 0 12px;font-size:13.5px;color:var(--mute)}
+details.honest .body p{margin:0 0 6px}
+.empty{padding:24px;text-align:center;color:var(--mute)}
+.foot{font-size:12.5px;color:var(--mute);line-height:1.5}.foot a{color:var(--acc)}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><img src="icons/icon.svg" alt=""><h1>Filing Alerts</h1></div>
+    <span class="spacer"></span>
+    <button class="btn small" id="themebtn" type="button" aria-label="Switch light or dark">◐</button>
+    <button class="btn small primary" data-install hidden type="button" onclick="Factory.install()">Install</button>
+  </header>
+  <main class="page">
+    <section class="card head">
+      <h2>Michigan 8-K filings</h2>
+      <div class="sub" id="sub">Loading the latest check…</div>
+      <div class="kpis" id="kpis"></div>
+    </section>
+    <details class="honest">
+      <summary>What this is, and what it is not</summary>
+      <div class="body">
+        <p>An 8-K is the notice a public company must file with the SEC within four business days of a major event. This page lists the ones filed by companies with a Michigan business address, and turns the SEC's item codes into plain words.</p>
+        <p>The plain-words line is a translation of the item codes, not a summary of the document. Open the filing for the details. The SEC already offers free per-company alerts; this adds a Michigan-wide view and a watchlist.</p>
+        <p id="coverage"></p>
+      </div>
+    </details>
+    <div class="toolbar">
+      <div class="chips" id="chips" role="group" aria-label="Filter by type"></div>
+      <div class="row"><input type="search" id="q" placeholder="Search company, ticker, city or industry" autocomplete="off" aria-label="Search"><span class="count" id="count"></span></div>
+    </div>
+    <section class="feed" id="feed" aria-live="polite"></section>
+    <footer class="foot" id="foot"></footer>
+  </main>
+</div>
+<script src="assets/factory.js"></script>
+<script src="data/latest.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

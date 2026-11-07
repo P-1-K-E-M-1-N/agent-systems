@@ -1,0 +1,11 @@
+.cache/
+__pycache__/
+*.pyc
+.env
+*.log
+lanes/*/data/raw/
+.claude/settings.local.json
+.claude/worktrees/
+
+# local sync helper log (scripts/sync_from_nick.cmd)
+ops/usage/sync_log.txt

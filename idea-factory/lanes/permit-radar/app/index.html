@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Permit Radar</title>
+<meta name="description" content="Last week's Detroit permits for your trade, every Monday">
+<meta name="theme-color" content="#1c1f26">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/leaflet.css">
+<link rel="stylesheet" href="assets/factory.css">
+<style>
+/* Permit Radar identity: Detroit job site. Charcoal, hi-vis yellow, hazard tape, condensed headline type.
+   Trade colors are the only hues on the map so a pin reads at a glance. */
+:root{
+  --acc:#ffb400;--acc-fg:#171a1f;--focus:#ffb400;
+  --bg:#f1efe9;--card:#fbfaf7;--card2:#ebe8df;--line:#d9d4c7;--mute:#5f6670;
+  --map-land:#e7e3d8;--map-line:#b9b3a6;--map-water:#d6dde4;
+  --ink:#1c1f26;--ink-fg:#f5f3ee;
+  --t-roofing:#c84b31;--t-electrical:#e3a700;--t-hvac:#1f9e8a;--t-plumbing:#2f6fd6;--t-demolition:#d9661a;--t-demolition_dumpster:#8a5a2b;--t-general:#8b909a;
+  --sans:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--cond:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --radius:6px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --acc:#ffb400;--acc-fg:#171a1f;--focus:#ffc846;
+  --bg:#13151a;--card:#1a1d24;--card2:#23272f;--line:#2f343d;--mute:#9aa1ab;
+  --map-land:#20242c;--map-line:#434a56;--map-water:#0f1217;
+  --ink:#0e1013;--ink-fg:#f5f3ee;
+  --t-roofing:#e8664b;--t-electrical:#f5c431;--t-hvac:#35c2aa;--t-plumbing:#5f94f0;--t-demolition:#f08035;--t-demolition_dumpster:#b98052;--t-general:#8f96a2}}
+:root[data-theme="dark"]{
+  --acc:#ffb400;--acc-fg:#171a1f;--focus:#ffc846;
+  --bg:#13151a;--card:#1a1d24;--card2:#23272f;--line:#2f343d;--mute:#9aa1ab;
+  --map-land:#20242c;--map-line:#434a56;--map-water:#0f1217;
+  --ink:#0e1013;--ink-fg:#f5f3ee;
+  --t-roofing:#e8664b;--t-electrical:#f5c431;--t-hvac:#35c2aa;--t-plumbing:#5f94f0;--t-demolition:#f08035;--t-demolition_dumpster:#b98052;--t-general:#8f96a2}
+
+body{background:var(--bg);overflow-x:hidden}
+.app{overflow-x:clip}
+h1,h2,.kpi b,.chip,.trend .v,.weeknum{font-family:var(--cond)}
+h1{font-size:22px;font-weight:700;letter-spacing:.02em;text-transform:uppercase}
+h2{font-size:24px;font-weight:700;letter-spacing:.01em}
+h3{letter-spacing:.1em;font-size:11.5px}
+
+/* Top bar: charcoal in both themes, hazard tape under it. */
+.topbar{background:var(--ink);color:var(--ink-fg);border-bottom:0;padding-top:9px;padding-bottom:9px}
+.topbar h1{color:var(--ink-fg)}
+.topbar .brand svg{width:30px;height:30px}
+.topbar .sub{font:600 12px/1 var(--cond);letter-spacing:.18em;text-transform:uppercase;color:var(--acc);margin-top:3px}
+.topbar .btn{background:transparent;color:var(--ink-fg);border-color:rgba(255,255,255,.25)}
+.topbar .btn:hover{background:rgba(255,255,255,.08)}
+.topbar .weekpill{display:inline-flex;align-items:center;gap:6px;background:var(--acc);color:var(--acc-fg);font:700 13px/1 var(--cond);letter-spacing:.04em;text-transform:uppercase;padding:6px 10px;border-radius:4px;white-space:nowrap}
+.tape{height:6px;background:repeating-linear-gradient(135deg,var(--acc) 0 14px,var(--ink) 14px 28px);flex:none}
+
+/* Trade chips: horizontally scrollable strip, never wider than the phone. */
+.trades{display:flex;gap:8px;padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));overflow-x:auto;scrollbar-width:none;background:var(--card);border-bottom:1px solid var(--line);-webkit-overflow-scrolling:touch}
+.trades::-webkit-scrollbar{display:none}
+.chip{appearance:none;flex:none;display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--line);background:var(--card);color:var(--fg);font-size:15px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;padding:6px 12px 6px 9px;border-radius:999px;cursor:pointer;line-height:1}
+.chip .dot{width:10px;height:10px;border-radius:50%;background:var(--c,var(--acc));flex:none;box-shadow:0 0 0 2px color-mix(in srgb,var(--c,var(--acc)) 30%,transparent)}
+.chip .n{font-size:13px;color:var(--mute);font-weight:600}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--ink-fg);border-color:var(--ink)}
+.chip[aria-pressed="true"] .n{color:var(--acc)}
+.chip:hover{border-color:var(--c,var(--acc))}
+
+/* Map + its overlays */
+.mapwrap{height:calc(100vh - 128px);height:calc(100dvh - 128px)}
+.maptools{position:absolute;right:10px;top:10px;z-index:500;display:flex;flex-direction:column;gap:6px;align-items:flex-end;max-width:70%}
+.maptools .note{font-size:11px;color:var(--mute);background:color-mix(in srgb,var(--card) 88%,transparent);padding:4px 8px;border-radius:4px;text-align:right}
+.legend-ctl{background:color-mix(in srgb,var(--card) 92%,transparent);border:1px solid var(--line);border-radius:var(--radius);padding:8px 10px;font-size:12px;box-shadow:var(--shadow);max-width:180px}
+.legend-ctl h3{margin-bottom:5px}
+.legend-ctl .item{display:flex;align-items:center;gap:7px;margin:2px 0;white-space:nowrap}
+.legend-ctl .item .dot{width:10px;height:10px;border-radius:50%;flex:none;border:1.5px solid rgba(255,255,255,.8)}
+.legend-ctl .ramp{height:8px;border-radius:4px;margin:6px 0 2px}
+.legend-ctl .ends{display:flex;justify-content:space-between;color:var(--mute);font-size:11px}
+.legend-ctl summary{cursor:pointer;font:650 11.5px var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);list-style:none}
+.legend-ctl summary::-webkit-details-marker{display:none}
+.leaflet-container{font-family:var(--sans)}
+.leaflet-tooltip.zip{font:600 12px var(--sans);padding:4px 8px;border-radius:4px}
+.leaflet-tooltip.zip b{font-family:var(--cond);font-size:14px}
+.leaflet-popup-content{margin:12px 14px;min-width:220px}
+.pop h4{margin:0 0 2px;font:700 17px/1.15 var(--cond)}
+.pop .tags{display:flex;gap:4px;flex-wrap:wrap;margin:4px 0 6px}
+.pop .tag{font:600 11px/1 var(--cond);letter-spacing:.05em;text-transform:uppercase;padding:3px 6px;border-radius:3px;color:#fff;background:var(--c)}
+.pop dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:12.5px}
+.pop dt{color:var(--mute)}
+.pop dd{margin:0}
+.pop .work{margin:6px 0 0;font-size:12.5px}
+.pop .links{margin-top:8px;font-size:12px}
+.leaflet-control-attribution{font-size:9.5px}
+
+/* Panel */
+.panel{gap:12px}
+.weekhead{display:flex;flex-direction:column;gap:4px}
+.weekhead .meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--mute)}
+.summary{margin:0;font-size:15px;line-height:1.5}
+.summary b{font-weight:650}
+.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+.kpi{border-left:3px solid var(--acc)}
+.kpi b{font-size:26px;letter-spacing:.01em}
+.kpi .sub{display:block;font-size:12px;color:var(--fg);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card h3{margin-bottom:8px}
+.bar{display:flex;height:14px;border-radius:4px;overflow:hidden;background:var(--card2);gap:2px}
+.bar span{display:block;height:100%;background:var(--c);min-width:2px;opacity:.95}
+.bar span.dim{opacity:.22}
+.bars{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:center;margin-top:8px;font-size:13px}
+.bars .lab{display:flex;align-items:center;gap:7px;cursor:pointer}
+.bars .lab .dot{width:9px;height:9px;border-radius:50%;background:var(--c);flex:none}
+.bars .track{height:6px;background:var(--card2);border-radius:3px;overflow:hidden}
+.bars .track i{display:block;height:100%;background:var(--c);border-radius:3px}
+.bars .dim{opacity:.4}
+.trend{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px;align-items:end;height:92px;padding-top:16px}
+.trend .col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:3px;min-width:0}
+.trend .v{font-size:12px;font-weight:700;color:var(--mute);line-height:1}
+.trend .b{width:100%;background:color-mix(in srgb,var(--fg) 22%,var(--card2));border-radius:3px 3px 0 0;min-height:2px}
+.trend .col.now .b{background:var(--acc)}
+.trend .col.now .v{color:var(--fg)}
+.trend .l{font-size:10.5px;color:var(--mute);white-space:nowrap}
+.trendwrap{position:relative}
+.trendcap{font-size:12.5px;color:var(--mute);margin:6px 0 0}
+.listhead{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.listhead h3{margin:0}
+.listhead .spacer{flex:1}
+.permits{display:flex;flex-direction:column;gap:6px;margin:10px 0 0;padding:0;list-style:none}
+.permits li{display:grid;grid-template-columns:4px 1fr auto;gap:0 10px;background:var(--card2);border-radius:var(--radius);padding:8px 10px 8px 0;cursor:pointer;min-width:0}
+.permits li:hover,.permits li.active{outline:2px solid var(--acc);outline-offset:-2px}
+.permits li .rail{background:var(--c);border-radius:0 2px 2px 0}
+.permits li .addr{font:700 15px/1.2 var(--cond);letter-spacing:.01em}
+.permits li .where{font-size:12px;color:var(--mute)}
+.permits li .what{font-size:12.5px;margin-top:3px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.permits li .right{text-align:right;font-size:12px;color:var(--mute);display:flex;flex-direction:column;align-items:flex-end;gap:2px;max-width:120px}
+.permits li .right b{font:700 15px var(--cond);color:var(--fg)}
+.permits li .right .who{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px}
+.more{margin-top:8px;width:100%;justify-content:center}
+.foot{line-height:1.5}
+.foot p{margin:0 0 4px}
+
+@media (min-width:861px){.panel{height:calc(100vh - 128px);height:calc(100dvh - 128px)}}
+@media (max-width:860px){
+  .mapwrap{height:52vh;height:52dvh;min-height:300px}
+  .kpi b{font-size:24px}
+  .topbar .weekpill{display:none}
+}
+@media (max-width:420px){
+  h1{font-size:19px}
+  .chip{font-size:14px;padding:6px 10px 6px 8px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#ffb400"/><circle cx="16" cy="16" r="10.5" fill="none" stroke="#171a1f" stroke-width="1.6"/><circle cx="16" cy="16" r="5.5" fill="none" stroke="#171a1f" stroke-width="1.6"/><path d="M16 16 L16 5.5 A10.5 10.5 0 0 1 25.1 10.8 Z" fill="#171a1f"/><circle cx="16" cy="16" r="1.8" fill="#171a1f"/><circle cx="10" cy="20" r="1.6" fill="#171a1f"/><circle cx="21" cy="21" r="1.6" fill="#171a1f"/></svg>
+      <div><h1>Permit Radar</h1><div class="sub">Detroit · weekly</div></div>
+    </div>
+    <span class="weekpill" id="weekpill">Loading week</span>
+    <span class="spacer"></span>
+    <button class="btn small" data-install hidden onclick="Factory.install()">Install app</button>
+  </header>
+  <div class="tape" aria-hidden="true"></div>
+  <nav class="trades" id="trades" aria-label="Trade filter"></nav>
+  <div class="main">
+    <section class="mapwrap">
+      <div id="map" class="map" aria-label="Map of last week's Detroit permits"></div>
+      <div class="maptools" id="maptools"></div>
+    </section>
+    <aside class="panel" id="panel">
+      <div class="weekhead">
+        <h3>Last week</h3>
+        <h2 id="weekTitle">Permits issued</h2>
+        <div class="meta"><span id="refreshed"></span><span id="geonote"></span></div>
+        <p class="summary" id="summary"></p>
+      </div>
+      <div class="kpis" id="kpis"></div>
+      <section class="card">
+        <h3 id="barTitle">By trade</h3>
+        <div class="bar" id="bar"></div>
+        <div class="bars" id="bars"></div>
+      </section>
+      <section class="card">
+        <h3>Last 8 weeks</h3>
+        <div class="trendwrap"><div class="trend" id="trend"></div></div>
+        <p class="trendcap" id="trendcap"></p>
+      </section>
+      <section class="card">
+        <div class="listhead">
+          <h3 id="listTitle">Permits</h3>
+          <span class="spacer"></span>
+          <button class="btn small" id="copyBtn" type="button">Copy addresses</button>
+        </div>
+        <input type="search" id="q" placeholder="Search address, contractor, ZIP, neighborhood" autocomplete="off" aria-label="Search permits">
+        <ol class="permits" id="list"></ol>
+        <button class="btn small more" id="moreBtn" type="button" hidden>Show all</button>
+      </section>
+      <footer class="foot">
+        <p id="footData">Data: City of Detroit Open Data Portal (BSEED building, trades and demolition permits).</p>
+        <p>Open data provided AS-IS by the City; commercial redistribution is being confirmed in writing. Addresses, permit details and contractor of record only; no owner or resident information, by design.</p>
+        <p>Trade tags come from keywords in the permit type and work description, so a permit can carry more than one. Estimated cost is published for building permits only.</p>
+      </footer>
+    </aside>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="assets/factory.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

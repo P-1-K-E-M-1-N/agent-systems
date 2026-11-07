@@ -1,0 +1,21 @@
+{
+ "sources": [
+  {
+   "id": "gdelt_doc",
+   "name": "GDELT 2.0 DOC API (news article search)",
+   "owner": "The GDELT Project",
+   "base_url": "https://api.gdeltproject.org/api/v2/doc/doc",
+   "terms_url": "https://www.gdeltproject.org/about.html",
+   "license": "GDELT is free and open: 'all GDELT datasets are available for unlimited and unrestricted use for any academic, commercial, or governmental use of any kind without fee', with citation. Article text itself belongs to publishers; only titles, URLs, domains, dates are used.",
+   "commercial_ok": true,
+   "attribution": "Source: The GDELT Project",
+   "update_frequency": "every 15 minutes",
+   "rate_limit": "informal; about 1 request per 5 seconds",
+   "key_env": "",
+   "cache_ttl_s": 3600,
+   "daily_budget": 100,
+   "min_interval_s": 5,
+   "notes": "Company/organization news only; no individual-person tracking."
+  }
+ ]
+}

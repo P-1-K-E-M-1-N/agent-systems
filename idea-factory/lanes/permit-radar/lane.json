@@ -1,0 +1,46 @@
+{
+  "slug": "permit-radar",
+  "name": "Permit Radar",
+  "type": "revenue",
+  "order": 1,
+  "pitch": "Weekly Detroit-area building-permit lead lists for trades (roofers, electricians, HVAC, plumbers, dumpster rental), ~$30/month. Sources: data.detroitmi.gov permits; check Royal Oak and Oakland County. Address, permit details and contractor of record only; no homeowner enrichment.",
+  "gate": "G2",
+  "status": "waiting_nick",
+  "blocker": "Pipeline re-checked 2026-11-01 at Nick's request (all OK); Nick to send the 20 outreach messages or say what else to confirm. Detroit commercial-use answer still pending.",
+  "next_step": "Tally replies, re-score license when Detroit answers, final G3",
+  "gates": {
+    "G0": {
+      "started": "2026-10-24T05:32:26+00:00",
+      "finished": "2026-10-24T05:37:22+00:00",
+      "result": "pass",
+      "note": "Detroit building (47,820; 102/7d) + trades (121,606; 465/7d; 89% with contractor business) + demolition layers live, keyless, updated daily (last edit 2026-10-23). Portal policy allows business reuse; city-wide Privacy page conflicts, written confirmation flagged for Nick. Royal Oak = BS&A/AccessMyGov, no API. Oakland County does not issue permits, no hub dataset."
+    },
+    "G1": {
+      "started": "2026-10-24T05:37:22+00:00",
+      "finished": "2026-10-24T05:42:33+00:00",
+      "result": "pass",
+      "note": "prototype web app in app/ (2026-10-25)"
+    },
+    "G2": {
+      "started": "2026-10-24T05:42:33+00:00",
+      "finished": "2026-10-24T05:53:29+00:00",
+      "result": null,
+      "note": "outreach pack: 20 targets drafted"
+    },
+    "G3": {
+      "started": null,
+      "finished": null,
+      "result": null,
+      "note": ""
+    },
+    "PLAN": {
+      "started": null,
+      "finished": null,
+      "result": null,
+      "note": ""
+    }
+  },
+  "merge_candidates": [],
+  "created": "2026-10-24T05:27:31+00:00",
+  "updated": "2026-11-02T00:01:32+00:00"
+}

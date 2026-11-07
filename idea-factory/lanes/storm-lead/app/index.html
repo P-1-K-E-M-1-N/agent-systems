@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Storm Lead</title>
+<meta name="description" content="Morning-after hail and wind map for Michigan roofers: every qualifying NWS storm report, counties shaded by severity, live warnings, your service area and the ZIPs to canvass.">
+<meta name="theme-color" content="#1b3a5c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="assets/leaflet.css">
+<link rel="stylesheet" href="assets/factory.css">
+<style>
+/* Storm Lead identity: slate-violet storm sky for the brand and county shading, icy blue for hail,
+   amber for wind. Light theme is a cool overcast morning; dark theme is the night the storm came through. */
+:root{
+  --bg:#eef1f5;--card:#ffffff;--card2:#e7ebf1;--line:#cfd6df;--fg:#161b24;--mute:#5a6472;
+  --acc:#4f4590;--acc-fg:#ffffff;--focus:#2f7de1;
+  --hail:#1a7fbf;--hail-soft:#d7ecf8;--wind:#c8740f;--wind-soft:#fbe8cf;
+  --torn:#b8162b;--svr:#d9641a;--flood:#1f7a57;--windadv:#9c7a12;
+  --map-land:#e3e7ec;--map-line:#a9b3c0;--map-water:#c3d3e4;--map-out:#d7dde6;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0c1220;--card:#131a28;--card2:#1a2334;--line:#283346;--fg:#e6e9f0;--mute:#97a2b3;
+  --acc:#a89ce8;--acc-fg:#120f26;--focus:#7fb3ff;
+  --hail:#4db8ee;--hail-soft:#13324a;--wind:#eb9c2e;--wind-soft:#3b2a12;
+  --torn:#ff5c6c;--svr:#ff9a4d;--flood:#4fc48f;--windadv:#e5c24a;
+  --map-land:#1a2334;--map-line:#36455c;--map-water:#0a0f19;--map-out:#121a28;
+}}
+:root[data-theme="dark"]{
+  --bg:#0c1220;--card:#131a28;--card2:#1a2334;--line:#283346;--fg:#e6e9f0;--mute:#97a2b3;
+  --acc:#a89ce8;--acc-fg:#120f26;--focus:#7fb3ff;
+  --hail:#4db8ee;--hail-soft:#13324a;--wind:#eb9c2e;--wind-soft:#3b2a12;
+  --torn:#ff5c6c;--svr:#ff9a4d;--flood:#4fc48f;--windadv:#e5c24a;
+  --map-land:#1a2334;--map-line:#36455c;--map-water:#0a0f19;--map-out:#121a28;
+}
+body{background:var(--bg)}
+.topbar .brand h1{font-size:18px}
+.topbar .brand small{display:block;font-size:11.5px;font-weight:500;color:var(--mute);line-height:1.2}
+.topbar .brand .logo{width:30px;height:30px;border-radius:8px;background:var(--acc);display:grid;place-items:center;flex:none}
+.topbar .brand .logo svg{width:20px;height:20px}
+.datechip{font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--card2);white-space:nowrap}
+@media (max-width:520px){.datechip{display:none}}
+
+/* map overlays */
+.mapwrap{min-height:380px}
+.overlay{position:absolute;z-index:500;background:color-mix(in srgb,var(--card) 92%,transparent);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);font-size:12.5px}
+.layers{top:10px;right:10px;padding:6px;display:flex;flex-direction:column;gap:4px;max-width:170px}
+.layers .btn{justify-content:flex-start;padding:5px 8px;font-size:12.5px;width:100%;border-color:transparent}
+.layers .btn[aria-pressed="true"]{background:var(--acc);color:var(--acc-fg)}
+.layers .btn:disabled{opacity:.45;cursor:default}
+.layers .note{color:var(--mute);font-size:11px;line-height:1.3;padding:2px 4px 0;max-width:160px}
+.layers svg{width:14px;height:14px;flex:none}
+.maplegend{left:10px;bottom:24px;padding:8px 10px;display:flex;flex-direction:column;gap:5px;max-width:230px}
+.maplegend .row{gap:6px}
+.maplegend .ico{width:18px;height:18px;display:inline-grid;place-items:center}
+.maplegend .ico svg{width:100%;height:100%}
+.maplegend .ramp{display:flex;gap:2px;align-items:center}
+.maplegend .ramp i{display:block;width:22px;height:10px;border-radius:2px;border:1px solid color-mix(in srgb,var(--fg) 15%,transparent)}
+.maplegend .ramp small{margin-left:4px}
+.hint{top:10px;left:50%;transform:translateX(-50%);padding:6px 12px;font-weight:600;color:var(--fg);max-width:calc(100% - 200px);text-align:center}
+.hint.arm{background:var(--acc);color:var(--acc-fg);border-color:var(--acc)}
+@media (max-width:600px){
+  .hint{top:auto;bottom:24px;right:10px;left:auto;transform:none;max-width:46%;font-size:12px;padding:5px 9px}
+  .maplegend{max-width:48%;padding:6px 8px;gap:3px;font-size:12px}
+  .maplegend small{display:none}
+  .maplegend .ramp i{width:16px;height:8px}
+  .layers{max-width:150px;padding:4px}
+  .layers .btn{padding:4px 7px;font-size:12px}
+}
+.leaflet-container{font:inherit}
+.leaflet-container .leaflet-control-attribution{font-size:10px}
+.leaflet-interactive:focus{outline:none}
+
+/* report pins: inline SVG in a divIcon, sized by magnitude */
+.pin{display:grid;place-items:center;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+.pin svg{width:100%;height:100%;overflow:visible}
+.pin.hail .fill{fill:var(--hail)}
+.pin.wind .fill{fill:var(--wind)}
+.pin.wind.dmg .fill{fill:var(--card)}
+.pin.wind.dmg .stroke{stroke:var(--wind)}
+.pin .edge{stroke:var(--card);stroke-width:2}
+.pin.wind.dmg .edge{stroke:var(--wind);stroke-width:2.5}
+.pin.active svg{outline:none}
+.pin.active{filter:drop-shadow(0 0 0 3px color-mix(in srgb,var(--acc) 70%,transparent)) drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+.home{width:18px;height:18px;border-radius:50%;background:var(--acc);border:3px solid var(--card);box-shadow:0 0 0 2px var(--acc),0 2px 6px rgba(0,0,0,.4);cursor:grab}
+.popup h4{margin:0 0 4px;font-size:14px;display:flex;align-items:center;gap:6px}
+.popup h4 .ico{width:18px;height:18px;display:inline-grid}
+.popup h4 .ico svg{width:100%;height:100%}
+.popup .mute{display:block}
+.popup .zips{margin-top:6px;display:flex;flex-wrap:wrap;gap:4px}
+.popup .zips code{background:var(--card2);padding:1px 6px;border-radius:4px}
+.popup .cm{margin-top:6px;font-size:12.5px;line-height:1.35}
+.leaflet-tooltip.county{font-size:12.5px;padding:5px 8px;border-radius:6px}
+.leaflet-tooltip.county b{display:block}
+
+/* panel */
+.panel{gap:12px}
+.panel h3{display:flex;align-items:center;gap:8px}
+.dayhead{display:flex;flex-direction:column;gap:3px}
+.dayhead .when{font-size:17px;font-weight:650;line-height:1.25}
+.dayhead .pill{align-self:flex-start}
+.summary{font-size:14.5px;line-height:1.5;border-left:3px solid var(--acc);padding:8px 12px;background:var(--card2);border-radius:0 var(--radius) var(--radius) 0}
+.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (min-width:861px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi.hail b{color:var(--hail)}
+.kpi.wind b{color:var(--wind)}
+.kpi small{display:block;font-size:11px;color:var(--mute);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.scrub{display:flex;flex-direction:column;gap:6px}
+.scrub .bars{display:grid;grid-template-columns:repeat(30,minmax(0,1fr));gap:2px;height:54px;align-items:end;padding:0 2px}
+.scrub .bars button{appearance:none;border:0;padding:0;margin:0;background:transparent;height:100%;display:flex;align-items:flex-end;cursor:pointer;min-width:0;border-radius:3px}
+.scrub .bars button i{display:block;width:100%;min-height:3px;border-radius:3px 3px 0 0;background:var(--line)}
+.scrub .bars button.has i{background:color-mix(in srgb,var(--acc) 70%,var(--card2))}
+.scrub .bars button.sel i{background:var(--acc)}
+.scrub .bars button:hover i{filter:brightness(1.12)}
+.scrub .bars button.sel{box-shadow:inset 0 -2px 0 var(--acc)}
+.scrub .axis{display:flex;justify-content:space-between;font-size:11px;color:var(--mute);padding:0 2px}
+.scrub .cap{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;gap:8px}
+.scrub .cap b{font-size:13px}
+
+.area .meta{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:13px}
+.area .meta b{font-size:20px;font-variant-numeric:tabular-nums}
+.area .zips{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.area .zips code{background:var(--card2);padding:2px 7px;border-radius:5px;font-size:12.5px}
+.area .zips code.hit{background:color-mix(in srgb,var(--acc) 18%,transparent);color:var(--fg)}
+.area .ctl{display:flex;gap:8px;align-items:center}
+.area .ctl label{font-size:12.5px;color:var(--mute);white-space:nowrap}
+.area .ctl output{font-weight:650;font-variant-numeric:tabular-nums;min-width:52px;text-align:right;font-size:13px}
+
+.warns h3{flex-wrap:wrap}
+.warns .stamp{font-size:11px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--mute)}
+.warns li{grid-template-columns:auto 1fr;align-items:start}
+.warns .sw{width:10px;height:10px;border-radius:3px;margin-top:5px}
+.warns .ev{font-weight:650}
+.warns .ar{font-size:12.5px;color:var(--mute)}
+
+.reports li{grid-template-columns:auto 1fr auto;cursor:pointer}
+.reports .ico{width:26px;height:26px;display:grid;place-items:center}
+.reports .ico svg{width:100%;height:100%}
+.reports .t{min-width:0}
+.reports .t b{display:block;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.reports .t span{font-size:12.5px;color:var(--mute);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.reports .tm{font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums;white-space:nowrap}
+.reports .more{text-align:center}
+.foot p{margin:4px 0}
+.themebtn{padding:6px 8px}
+.themebtn svg{width:16px;height:16px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.nomap{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--mute);background:var(--map-water)}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M7 15a4.5 4.5 0 0 1 .6-9A6 6 0 0 1 19 8.5a3.5 3.5 0 0 1-.5 7H7z"/><path d="M9 19l-1 3M13 18l-1 3M17 19l-1 3"/></svg></span>
+      <div><h1>Storm Lead</h1><small>Michigan hail &amp; wind, the morning after</small></div>
+    </div>
+    <span class="spacer"></span>
+    <span class="datechip num" id="datechip">loading yesterday</span>
+    <button class="btn small themebtn" id="themebtn" type="button" aria-label="Switch theme" title="Switch theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+    <button class="btn small primary" data-install hidden type="button" onclick="Factory.install()">Install app</button>
+  </header>
+
+  <div class="main">
+    <section class="mapwrap">
+      <div id="map" class="map" aria-label="Map of Michigan storm reports"></div>
+      <div class="overlay layers" id="layers" role="group" aria-label="Map layers">
+        <button class="btn" type="button" data-layer="counties" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h8v7H3zM11 5h10v4H11zM3 12h6v7H3zM9 9h12v10H9z"/></svg>Counties</button>
+        <button class="btn" type="button" data-layer="warnings" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3 2.5 20h19z"/><path d="M12 9v5M12 17v.5"/></svg>Warnings</button>
+        <button class="btn" type="button" data-layer="area" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/></svg>Service area</button>
+        <button class="btn" type="button" data-layer="osm" aria-pressed="false" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l6-3 6 3 6-3v13l-6 3-6-3-6 3zM9 4v13M15 7v13"/></svg>Street map</button>
+        <button class="btn" type="button" data-layer="radar" aria-pressed="false" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 12 19 5"/><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg>Radar</button>
+        <div class="note" id="layernote" hidden>Street map and radar appear when the app is installed from its own address.</div>
+      </div>
+      <div class="overlay maplegend" id="maplegend" aria-label="Legend"></div>
+      <div class="overlay hint" id="hint" hidden></div>
+    </section>
+
+    <aside class="panel" id="panel">
+      <div class="dayhead">
+        <span class="pill acc" id="daytag">Yesterday</span>
+        <div class="when" id="dayname">Loading the latest storm day</div>
+        <small id="daynote">NWS preliminary storm reports, 8am to 8am ET</small>
+      </div>
+
+      <p class="summary" id="summary">Reading yesterday's storm reports.</p>
+
+      <div class="kpis">
+        <div class="kpi"><b id="k-count" class="num">–</b><span>qualifying reports</span><small id="k-count-s">&nbsp;</small></div>
+        <div class="kpi"><b id="k-counties" class="num">–</b><span>counties hit</span><small id="k-counties-s">&nbsp;</small></div>
+        <div class="kpi hail"><b id="k-hail" class="num">–</b><span>largest hail</span><small id="k-hail-s">&nbsp;</small></div>
+        <div class="kpi wind"><b id="k-wind" class="num">–</b><span>strongest wind</span><small id="k-wind-s">&nbsp;</small></div>
+      </div>
+
+      <section class="scrub card flat" aria-label="Replay the last 30 days">
+        <h3>Last 30 days <small id="scrub-total"></small></h3>
+        <div class="bars" id="bars" role="group" aria-label="Qualifying reports per day"></div>
+        <div class="axis"><span id="ax0"></span><span id="ax1"></span></div>
+        <input type="range" id="dayrange" min="0" max="29" value="29" step="1" aria-label="Day">
+        <div class="cap"><span id="scrub-cap"></span><button class="btn small" type="button" id="backtoday">Back to latest</button></div>
+      </section>
+
+      <section class="area card" aria-label="My service area">
+        <h3>My service area</h3>
+        <div class="meta"><span><b id="a-count" class="num">–</b> <span id="a-label">reports inside</span></span><button class="btn small" type="button" id="a-set">Set on map</button></div>
+        <div class="ctl"><label for="radius">Radius</label><input type="range" id="radius" min="5" max="60" step="5" value="25"><output id="radius-out" for="radius">25 mi</output></div>
+        <small id="a-hint">Tap the map where your trucks start the day. The circle and count are remembered on this device.</small>
+        <div class="zips" id="a-zips"></div>
+        <div class="row"><button class="btn small primary" type="button" id="a-copy" hidden>Copy ZIPs</button><button class="btn small" type="button" id="a-clear" hidden>Clear</button></div>
+      </section>
+
+      <section class="warns" aria-label="Active NWS warnings">
+        <h3>Live NWS warnings <span class="stamp" id="w-stamp"></span></h3>
+        <ul class="list" id="w-list"></ul>
+      </section>
+
+      <section class="reports" aria-label="Reports">
+        <h3>Reports, worst first <small id="r-count"></small></h3>
+        <ul class="list" id="r-list"></ul>
+      </section>
+
+      <footer class="foot" id="foot">
+        <p id="f-rule"></p>
+        <p id="f-zip"></p>
+        <p id="f-src"></p>
+        <p id="f-time"></p>
+      </footer>
+    </aside>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin=""></script>
+<script src="assets/factory.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

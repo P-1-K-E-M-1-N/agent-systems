@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Job-Day Alerts</title>
+<meta name="description" content="Michigan forecast go/no-go for roofers, landscapers and outdoor venues: which days and cities are safe to schedule crews or events.">
+<meta name="theme-color" content="#1f6f8b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="assets/leaflet.css">
+<link rel="stylesheet" href="assets/factory.css">
+<style>
+:root{--acc:#1f6f8b;--acc-fg:#fff;--go:#2e7d4f;--maybe:#b7791f;--stop:#b3261e;--map-land:#e4e9ee;--map-line:#a9b3c0;--map-water:#c9d8e6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--acc:#5fb4d2;--acc-fg:#0b1a20;--go:#5fbf86;--maybe:#e0b25c;--stop:#ef7b74;--map-land:#1c2530;--map-line:#3a4a5c;--map-water:#0e151d}}
+:root[data-theme="dark"]{--acc:#5fb4d2;--acc-fg:#0b1a20;--go:#5fbf86;--maybe:#e0b25c;--stop:#ef7b74;--map-land:#1c2530;--map-line:#3a4a5c;--map-water:#0e151d}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.days button{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:8px;padding:6px 2px;cursor:pointer;font:inherit;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
+.days button i{width:14px;height:14px;border-radius:50%;display:block}
+.days button[aria-pressed="true"]{outline:2px solid var(--acc);outline-offset:-2px;font-weight:650}
+.go{background:var(--go)}.maybe{background:var(--maybe)}.stop{background:var(--stop)}
+.hdr{display:flex;flex-direction:column;gap:3px}.hdr .when{font-size:17px;font-weight:650}
+.summary{border-left:3px solid var(--acc);padding:8px 12px;background:var(--card2);border-radius:0 8px 8px 0;font-size:14.5px;line-height:1.5}
+.cities li{grid-template-columns:auto 1fr auto;cursor:pointer;align-items:center}
+.cities .dot{width:14px;height:14px;border-radius:50%}
+.cities b{display:block;font-size:14px}.cities span.r{font-size:12.5px;color:var(--mute)}
+.rules{font-size:12.5px;color:var(--mute);line-height:1.5}
+.panel{gap:12px}.panel h3{margin:0;font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--mute)}
+.overlay{position:absolute;z-index:500;left:10px;bottom:24px;padding:8px 10px;background:color-mix(in srgb,var(--card) 92%,transparent);border:1px solid var(--line);border-radius:8px;font-size:12.5px;display:flex;flex-direction:column;gap:4px}
+.overlay .item{display:flex;align-items:center;gap:6px}.overlay i{width:12px;height:12px;border-radius:50%;display:block}
+.hrs{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:2px;margin-top:6px}
+.hrs i{display:block;height:16px;border-radius:2px}
+.warns li{grid-template-columns:1fr}
+.themebtn{padding:6px 10px}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><img src="icons/icon.svg" alt=""><h1>Job-Day Alerts</h1></div>
+    <span class="spacer"></span>
+    <span class="pill" id="stamp">loading</span>
+    <button class="btn small themebtn" id="themebtn" type="button" aria-label="Switch theme">Theme</button>
+    <button class="btn small primary" data-install hidden type="button" onclick="Factory.install()">Install app</button>
+  </header>
+  <div class="main">
+    <section class="mapwrap">
+      <div id="map" class="map" aria-label="Map of Michigan job-day verdicts"></div>
+      <div class="overlay" aria-label="Legend">
+        <div class="item"><i class="go"></i>Good to work</div>
+        <div class="item"><i class="maybe"></i>Risky: have a plan B</div>
+        <div class="item"><i class="stop"></i>Hold the crew</div>
+      </div>
+    </section>
+    <aside class="panel" id="panel">
+      <div class="tabs" id="tabs" role="group" aria-label="Trade"></div>
+      <div class="days" id="days" role="group" aria-label="Day"></div>
+      <div class="hdr"><div class="when" id="when"></div><small id="whensub"></small></div>
+      <p class="summary" id="summary"></p>
+      <section aria-label="Cities"><h3>Cities</h3><ul class="list cities" id="cities"></ul></section>
+      <section class="card flat"><h3>The rule for this trade</h3><p class="rules" id="rules"></p></section>
+      <section class="warns" aria-label="NWS alerts"><h3>Active NWS alerts <small id="w-stamp"></small></h3><ul class="list" id="w-list"></ul></section>
+      <footer class="foot">
+        <p>Source: National Weather Service hourly forecasts for 8 Michigan city points and active alerts (public domain). This is a forecast, not an observation: it can change, and it is a planning aid, not a safety guarantee. Rules are a starting point; your own limits may differ.</p>
+        <p id="asof"></p>
+      </footer>
+    </aside>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin=""></script>
+<script src="assets/factory.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
